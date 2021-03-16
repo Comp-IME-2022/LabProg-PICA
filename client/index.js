@@ -2,10 +2,12 @@ $(function() {
     var body = $("#bodyContainer");
     var navbar = $("#navbarContainer");
     var footer = $("#footerContainer");
-
+    
     body.load("./document/search/search.html");
     navbar.load("./components/navbar/navbar.html");
     footer.load("./components/footer/footer.html");
+    
+    console.log(checkAuth());
 });
 
 var openModal = function modalService(div, url, title, bodyURL){
