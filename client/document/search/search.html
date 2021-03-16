@@ -2,11 +2,15 @@
 <link rel="stylesheet" href="/document/search/search.css">
 
 <div class="container">
-    <div class="row mt-2">
-        <div class="col-10">
-        <input class="form-control" type="text" placeholder="Pesquisa de documentos">
+    <div class="d-flex justify-content-around row mt-2">
+        <div class="col-9">
+            <input class="form-control" type="text" placeholder="Pesquisa de documentos">
         </div>
-        <button class="btn btn-outline-success col-2" type="submit"><i class="bi bi-search"></i>
+        <button class="btn btn-outline-success col-1" type="submit">
+            <i class="bi bi-search"></i>
+        </button>
+        <button class="btn btn-outline-success col-1" type="button">
+            <i class="bi bi-plus-square"></i>
         </button>
     </div>
 
@@ -36,11 +40,6 @@
             </tr>
         </tbody>
     </table>
-
-    <button id="modalBtn" class="btn btn-primary">
-        Launch demo modal
-        </button>
     
-        <div class="modal fade" id="modalContainer" role="dialog" aria-hidden="true">
-        </div>
+    <div class="modal fade" id="modalContainer" role="dialog" aria-hidden="true"></div>
 </div> 
