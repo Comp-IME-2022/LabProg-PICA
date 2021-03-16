@@ -1,2 +1,2 @@
 # LabProg - PICA
-Portal Interativo de Cadastro de Arquivos
+Sistema Acadêmico
