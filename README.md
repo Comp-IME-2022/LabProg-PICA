@@ -1,2 +1,2 @@
-# LabProg - PICA
+# LabProg - SA
 Sistema Acadêmico
