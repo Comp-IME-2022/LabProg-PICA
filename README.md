@@ -24,4 +24,4 @@ flask run
 ``` 
 Após isso o flask irá disponibilizar um web service em uma porta da máquina, a porta default utilizada pelo flask é a 5000.
 
->[Link](localhost:5000) para acessar o serviço após rodar os comandos
+>[Link](localhost:5000) para acessar o serviço após rodar os comandos: localhost:5000
