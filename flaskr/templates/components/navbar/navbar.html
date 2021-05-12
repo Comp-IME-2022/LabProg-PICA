@@ -1,0 +1,47 @@
+<link rel="stylesheet" href="{{url_for('static', filename='css/navbar.css')}}">
+<script src="{{url_for('static', filename='js/navbar.js')}}"></script>
+
+<nav class="navbar navbar-expand-lg navbar-light bg-light d-flex shadow-sm">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">
+        <img src="{{url_for('static', filename='assets/portal_logo.png')}}" width="100">
+    </a>
+
+    {% if session.get("user_id") %}
+    <div id="userOptions" >
+      {% if session.get("admin") %}
+      <button id="addDocBtn" class="btn btn-outline-success mx-1">
+          <i class="bi bi-file-earmark-plus"></i>
+      </button>
+      <button id="addUserBtn" class="btn btn-outline-success mx-1" type="button">
+        <i class="bi bi-person-plus"></i>
+      </button>
+      {% endif %}
+      <button id="logoutBtn" class="btn btn-outline-success mx-1" type="button" action>
+        <i class="bi bi-box-arrow-right"></i>
+      </button>
+    </div>
+    {% else %}
+    <form id="loginForm" method="POST" action="/auth/login">
+      <div class="form-row">
+        <div class="col-md-5">
+          <input name="login" id="loginInput" class="form-control" type="search" placeholder="Login" aria-label="Search">
+          <div class="invalid-feedback">Usuário inválido</div>
+        </div>
+        <div class="col-md-5">
+          <input name="senha" id="passwordInput" class="form-control" type="password" placeholder="Senha" aria-label="Search">
+          <div class="invalid-feedback">Senha inválida</div>
+        </div>
+        <button id="submitBtn" class="col-md-2 btn btn-outline-success" type="submit">Login</button>
+      </div>
+    </form>
+    {% endif %}
+  </div>
+  {% if g.loginError %}
+  <div class="alert alert-primary" role="alert">
+    Login ou senha incorretos!
+  </div>
+  {% endif %}
+</nav>         
+
+<div class="modal fade" id="modalContainer" role="dialog" aria-hidden="true"></div>

@@ -1,0 +1,32 @@
+
+<script src="{{url_for('static', filename='js/createUser.js')}}"></script>
+<link rel="stylesheet" href="{{url_for('static', filename='css/createUser.css')}}">
+
+<div class="container">
+<form class="form" id="registerForm">
+    <label for="nome">Nome:</label>
+    <input class="form-control" type="text" placeholder="Nome" id="nome" required>
+    <label for="nome">Sobrenome:</label>
+    <input class="form-control" type="text" placeholder="Sobrenome" id="sobrenome" required>
+    <label for="nome">Data de nascimento:</label>
+    <input class="form-control" type="date" placeholder="Data de Nascimento" id="nascimento" required>
+    <label for="nome">Login:</label>
+    <input class="form-control" type="text" placeholder="Login" id="login" required>
+    <label for="senha">Senha:</label>
+    <input class="form-control" type="password" placeholder="Senha" id="senha" required>
+    <label for="confirmacao-senha">Confirmação de Senha:</label>
+    <input class="form-control" type="password" placeholder="Confirmação de Senha" id="confirmacao-senha" required>
+    <div class="form-check">
+        <input type="checkbox" class="form-check-input custom-control-input-green" id="admin">
+        <label class="form-check-label" for="exampleCheck1">Administrador</label>
+    </div>
+    <div class="row">
+        <div class="btnContainer col-4">
+            <button class="btn btn-outline-success" type="submit" id="submitUser">Cadastrar</button>
+        </div>
+        <div class="btnContainer col-4">
+            <button class="btn btn-outline-success" type="button">Limpar</button>
+        </div>
+    </div>
+</form>
+</div>

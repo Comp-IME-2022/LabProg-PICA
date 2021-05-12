@@ -1,0 +1,39 @@
+#docsTable tr {
+    cursor: pointer !important;
+}
+
+.searchContainer #blockAccess {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchContainer #blockAccess #lock {
+    font-size: 5rem;
+    margin-bottom: 1rem;
+}
+
+.searchContainer #blockAccess h2 {
+    color: rgba(0,0,0,0.6);
+}
+
+.page-link {
+    position: relative;
+    display: block;
+    padding: .5rem .75rem;
+    margin-left: -1px;
+    line-height: 1.25;
+    color: #28a745;
+    background-color: #fff;
+    border: 1px solid #dee2e6;
+}
+
+.page-item.active .page-link {
+    z-index: 1;
+    color: #fff;
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
