@@ -1,7 +1,7 @@
 import functools
 import json
 from flask import (
-    Blueprint, flash, g, redirect, render_template, request, session, url_for, abort, jsonify
+    Blueprint, flash, g, redirect, render_template, send_file, request, session, url_for, abort, jsonify
 )
 import pymongo
 from bson.objectid import ObjectId
@@ -17,7 +17,7 @@ documents_col = bd["documentos"]
 bp = Blueprint('document', __name__, url_prefix='/document')
 
 DIR_PATH = os.path.dirname(os.path.realpath(__file__))
-UPLOAD_FOLDER = os.path.join(DIR_PATH, "files")
+UPLOAD_FOLDER = os.path.join(DIR_PATH, "static/file") #estabelece a rota para o qual o servidor upa os arquivos
 
 @bp.route('/get-pfc', methods=(['GET','POST'])) 
 def getPfc():
@@ -29,29 +29,25 @@ def getPfc():
 
   return  {"data": list_cursor}, 200, {'ContentType': 'application/json'}
 
-@bp.route('/download-pfc', methods=(['GET','POST']))   #linkar esta rota a um botão de download para cada registro de documento encontrado pela query da rota /get-pfc
-def download():
-  b64 = request.form['pdfB64']
-  pdf = base64.b64decode(b64)
-  if pdf[0:4] != b'%PDF':
-    raise ValueError('Missing the PDF file signature')
-
-  f = open(request.form['titulo'], 'wb')   #não sei configurar rota para fazer o download do pdf, na máquina que pediu
-  f.write(pdf)
-  f.close()
-
-  return "Download concluído"
-
 @bp.route('/upload-pfc', methods=(['GET','POST']))
 def uploadPfc():
     print(request.form)
     data_dic = {}
     for key in request.form.keys():
       data_dic[key] = request.form[key]
-
+    aux = data_dic['filename']
+    data_dic['filename'] = secure_filename(aux) #armazena no banco o nome do arquivo
     documents_col.insert_one(data_dic)
 
     return "sucesso", 200
+
+@bp.route('/download/<fileToDownload>')
+def downloadPfc(fileToDownload):
+    title = fileToDownload; #pega o titulo do arquivo como parametro
+    cursor = documents_col.find_one({"titulo": title}) #recupera no banco as informações do arquivo, junto com o nome do arquivo
+    filename = cursor['filename']
+    filepath = os.path.join(UPLOAD_FOLDER, filename)
+    return send_file(filepath)
 
 @bp.route('/upload-pfc-file', methods=(['GET','POST']))
 def uploadPfcFile():
@@ -59,7 +55,6 @@ def uploadPfcFile():
     filename = secure_filename(file.filename)
 
     filepath = os.path.join(UPLOAD_FOLDER, filename)
-    
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     file.save(filepath)
 

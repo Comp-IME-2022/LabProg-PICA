@@ -31,5 +31,30 @@ $(function(){
         return false
     });
     
-    
+    $("#downBtn").click(function(e){
+        e.preventDefault();
+        var title = $('#titulo').val();
+        console.log("entrou no click");
+        console.log(title);
+        $.ajax({
+            method : "GET",
+            url : `/document/download/${title}`,
+            xhrFields: {
+                responseType: 'blob'
+              },
+            success : function(blob){
+                data = new Date();
+                dia = data.getDate().toString()
+                mes = (data.getMonth()+1).toString()
+                mes = (mes.length == 1) ? '0'+mes : mes
+                ano = data.getFullYear().toString();
+                hora = data.getHours().toString();
+                min = data.getMinutes().toString();
+                var link=document.createElement('a');
+                link.href=window.URL.createObjectURL(blob);
+                link.download=`${title}_${dia}/${mes}/${ano}_${hora}h${min}`;
+                link.click();
+            }
+        })
+    });
 });

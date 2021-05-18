@@ -8,6 +8,7 @@ file.bind('change', function() {
     if (this.files[0].size > 20971520){
         alert("O tamanho máximo é 20MB!")
     }
+    console.log(this.files[0].name);
 });
 
 createDocumentForm.on("submit", function(e){
@@ -17,7 +18,7 @@ createDocumentForm.on("submit", function(e){
     var fileData = new FormData();
     var files = file[0].files[0]
     fileData.append('file', files)
-
+    
     //Retorna a data de hoje
     data = new Date()
     dia = data.getDate().toString()
@@ -34,9 +35,10 @@ createDocumentForm.on("submit", function(e){
         tipo: $('#tipo').val(),
         keyword:  $('#keyword').val(),
         resumo: $('#resumo').val(),
-        data : `${dia}/${mes}/${ano}`
+        data : `${dia}/${mes}/${ano}`,
+        filename: files.name
     };
-    
+
     //requisicao para enviar o pdf
     $.ajax({
         type : 'POST',

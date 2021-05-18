@@ -21,11 +21,16 @@
 		<input class="form-control" type="text" id="resumo"  value="{{ resumo }}">
 
 		<input style="display: none;" id="id" value="{{ id }}">
-
 		{% if session.get('admin') %}
-		<div id="sendBtn" class="button mt-3">
-			<button class="btn btn-outline-success me-auto">Alterar</button>
+		<div class="button mt-3">
+			<button id="sendBtn" class="btn btn-outline-success me-auto">Alterar</button>
 		</div>
 		{% endif %}
-	</form>           
+	</form>  
+
+	<div>
+		<button id="downBtn" class="btn btn-outline-success me-auto">Download</button>
+	</div>
+
+
 </div>
