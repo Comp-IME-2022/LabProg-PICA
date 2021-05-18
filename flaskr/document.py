@@ -9,10 +9,14 @@ import base64
 from werkzeug.utils import secure_filename
 import os
 import errno
+from bson.json_util import dumps
+from bson.json_util import loads
+
 
 myclient = pymongo.MongoClient("mongodb+srv://limarcospap:cQ6oyLLGIukkPvnd@cluster0.gahcw.mongodb.net/test?authSource=admin&replicaSet=atlas-708nws-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true")
 bd = myclient["labprog"]
 documents_col = bd["documentos"]
+
 
 bp = Blueprint('document', __name__, url_prefix='/document')
 
@@ -94,3 +98,25 @@ def managePfc():
     },upsert=True
 )
   return "sucesso", 200
+
+
+@bp.route('/backup', methods=(['GET','POST']))
+def backup():
+  recuperar = int(request.args.get("recuperar"))
+  pymongocursor = documents_col.find()
+  allfiles = list(pymongocursor)
+
+  if(recuperar == 0):
+    file_open = open("./flaskr/static/file/backup.JSON","w")
+    file_open.write(dumps(allfiles))
+    file_open.close()
+
+  if(recuperar == 1): 
+    file = request.files['file']
+    jsonarray = loads(file.readline())
+    for js in jsonarray:
+        documents_col.insert_one(js)
+
+  return "sucesso", 200
+
+
