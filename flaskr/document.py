@@ -1,4 +1,4 @@
-import functools
+import fitz  
 import json
 from flask import (
     Blueprint, flash, g, redirect, render_template, send_file, request, session, url_for, abort, jsonify
@@ -52,7 +52,7 @@ def downloadPfc(fileToDownload):
 @bp.route('/upload-pfc-file', methods=(['GET','POST']))
 def uploadPfcFile():
     file = request.files['file']
-    filename = secure_filename(file.filename)
+    filename = file.filename
 
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
@@ -89,3 +89,70 @@ def managePfc():
     },upsert=True
 )
   return "sucesso", 200
+
+#Funções que retornam os dados do PDF (colocar em um módulo separado depois...)
+
+def localizar_pagina(texto, doc):
+        pagina = 0
+        for page in doc:
+            pagina += 1
+            if (page.get_text().lower().find(texto) != -1):
+                return pagina
+        return 0
+
+def extrai_texto_parametro(parametro, page):
+    texto = page.get_text()
+    param_tamanho = len(parametro)
+    param_posicao = texto.lower().find(parametro)
+    if param_posicao != -1:
+        texto = texto[param_posicao + param_tamanho:]
+    return texto
+
+def detectar_tipo(doc):
+    tipos = ['pfc', 'projeto', 'tese', 'dissertação']
+    tipos_dict = {'pfc':'pfc', 'projeto':'pfc', 'tese': 'tese', 'dissertação': 'dis'}
+    for tipo in tipos:
+        if (doc[1].get_text().lower().find(tipo)) != -1:    
+            return tipos_dict[tipo]
+    
+  
+    return 'tipo nao encontrado'
+
+def retornar_titulo(doc):
+    return doc[0].getTextbox(fitz.Rect((0,400),(600,650)))
+
+def retornar_autores(doc):
+    return doc[0].getTextbox(fitz.Rect((0,200),(600,400)))
+
+def retornar_palavras_chave(doc):
+    pagina = localizar_pagina("palavras-chave:", doc)
+    if (pagina) != 0:
+         return extrai_texto_parametro("palavras-chave:", doc[pagina-1])
+    return 'palavras-chave nao encontradas'
+def retornar_resumo(doc):
+    resumo_pagina_numero = localizar_pagina("resumo", doc)
+    pagina_resumo = doc[resumo_pagina_numero-1]
+    resumo_texto_pagina = pagina_resumo.get_text()
+    return resumo_texto_pagina[resumo_texto_pagina.lower().find("resumo")+6:]
+
+def retornar_orientadores(doc):
+    for pag in doc:
+        rect = pag.search_for("orientador")
+        if rect:
+            rect[0] = fitz.Rect(rect[0].top_left, (rect[0].x1+200, rect[0].y1+50))
+            return pag.getTextbox(rect[0])
+    return 'nao foram encontrados orientadores'
+
+@bp.route('/get-pdf-data')
+def getPdfData():
+  filename = request.args.get('filename')
+  print(filename)
+  with fitz.open(UPLOAD_FOLDER+'/'+filename) as doc:
+    titulo = retornar_titulo(doc)
+    autores = retornar_autores(doc)
+    resumo = retornar_resumo(doc)
+    palavras_chave = retornar_palavras_chave(doc)
+    tipo = detectar_tipo(doc)
+    orientadores = retornar_orientadores(doc)
+  data = {'titulo':titulo, 'autores':autores, 'resumo':resumo, 'palavras_chave':palavras_chave, 'tipo': tipo,  'orientadores':orientadores}
+  return data, 200
