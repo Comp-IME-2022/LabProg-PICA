@@ -3,25 +3,49 @@
 <div class="container">
 	<form method = "post" id="manageDocumentForm">
 		<label for="titulo">Título:</label><br>
-		<input class="form-control" type="text" id="titulo" value="{{ titulo }}"/>
-
+		<input class="form-control" type="text" id="titulo" value="{{ titulo }}"
+		{% if not session.get("user_id") %}
+		disabled
+		{% endif %}
+		/>
+		
 		<label for="autores">Autores:</label><br>
-		<input class="form-control" type="text" id="autores" value="{{ autores }}"/>
+		<input class="form-control" type="text" id="autores" value="{{ autores }}"
+		{% if not session.get("user_id") %}
+		disabled
+		{% endif %}
+		/>
 
 		<label for="orientadores">Orientadores:</label><br>
-		<input class="form-control" type="text" id="orientadores"  value="{{ orientadores }}"/>
+		<input class="form-control" type="text" id="orientadores"  value="{{ orientadores }}"
+		{% if not session.get("user_id") %}
+		disabled
+		{% endif %}
+		/>
 
 		<label for="InstEns">Instituição de ensino:</label><br>
-		<input class="form-control" type="text" id="InstEns"  value="{{ InstEns }}">
+		<input class="form-control" type="text" id="InstEns"  value="{{ InstEns }}"
+		{% if not session.get("user_id") %}
+		disabled
+		{% endif %}
+		>
 
 		<label for="keyword">Adicionar Palavra-chave:</label><br>
-		<input class="form-control" type="text" id="keyword" value="{{ keyword }}">
+		<input class="form-control" type="text" id="keyword" value="{{ keyword }}"
+		{% if not session.get("user_id") %}
+		disabled
+		{% endif %}
+		>
 
 		<label for="resumo">Resumo:</label><br>
-		<input class="form-control" type="text" id="resumo"  value="{{ resumo }}">
+		<input class="form-control" type="text" id="resumo"  value="{{ resumo }}"
+		{% if not session.get("user_id") %}
+		disabled
+		{% endif %}
+		>
 
 		<input style="display: none;" id="id" value="{{ id }}">
-		{% if session.get('admin') %}
+		{% if session.get('user_id') %}
 		<div class="button mt-3">
 			<button id="sendBtn" class="btn btn-outline-success me-auto">Alterar</button>
 		</div>

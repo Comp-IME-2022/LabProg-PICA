@@ -1,5 +1,4 @@
 $(function(){
-    var sendBtn = $("#sendBtn");
     var manageDocumentForm = $('#manageDocumentForm');
     var modalContainer = $('#modalContainer');
 
@@ -25,7 +24,8 @@ $(function(){
             data: metadataData,
             dataType: "json",
             encode: true,
-            success :() => modalContainer.modal("hide")
+            success :() => modalContainer.modal("hide"),
+            error: (e) => console.log(e)
         })
     
         return false
