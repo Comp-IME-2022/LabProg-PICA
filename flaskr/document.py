@@ -57,11 +57,10 @@ def downloadPfc(fileToDownload):
 def uploadPfcFile():
     file = request.files['file']
     filename = file.filename
-
+    filename = secure_filename(filename)
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     file.save(filepath)
-
     return "sucesso", 200
 
 @bp.route('/search-pfc', methods=(['GET','POST']))
@@ -143,9 +142,14 @@ def retornar_resumo(doc):
         if len(re.findall(wrd, idx)) > 0:
             res = string.index(idx) + 1
     finalstr = ""
-    for i in range(0,res-1):
-      finalstr = finalstr + string[i] + " "
+    if(res != -1):
+      for i in range(0,res-1):
+        finalstr = finalstr + string[i] + " "
+    else:
+      for i in string:
+        finalstr = finalstr + i + " "
     return finalstr
+
     #return resumo_texto_pagina[resumo_texto_pagina.lower().find("resumo")+6:]
 
 def retornar_orientadores(doc):
@@ -174,6 +178,7 @@ def retornar_instens(doc):
 @bp.route('/get-pdf-data')
 def getPdfData():
   filename = request.args.get('filename')
+  filename = secure_filename(filename)
   print(filename)
   with fitz.open(UPLOAD_FOLDER+'/'+filename) as doc:
     titulo = retornar_titulo(doc)

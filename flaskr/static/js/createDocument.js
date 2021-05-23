@@ -1,6 +1,6 @@
 $(function() {
 var file = $('#myfile');
-var modalContainer = $('#modalContainer')
+var modalContainer = $('#modalContainer');
 var createDocumentForm = $("#createDocumentForm");
 
 file.bind('change', function() {
@@ -72,9 +72,5 @@ file.bind('change', function() {
     
         return false
     });
-
 });
-
-
-
 });
