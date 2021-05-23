@@ -29,7 +29,8 @@ file.bind('change', function() {
                 $('#orientadores').val(response['orientadores']),
                 $('#keyword').val(response['palavras_chave']),
                 $('#resumo').val(response['resumo']),
-                $('#tipo').val(response['tipo'])
+                $('#tipo').val(response['tipo']),
+                $('#InstEns').val(response['instEns'])
             }
         }),
         error: (e) => console.log(e)

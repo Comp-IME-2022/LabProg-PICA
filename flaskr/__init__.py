@@ -5,7 +5,6 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 
-
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
@@ -28,16 +27,9 @@ def create_app(test_config=None):
     except OSError:
         pass
 
-    # a simple page that says hello
-    @app.route('/hello')
-    def hello():
-        return 'Hello, World!'
-
     @app.route('/')
     def home():
-
         return render_template('./index.html')
-       
     @app.route('/footer')
     def footer():
         return render_template('./components/footer/footer.html')
