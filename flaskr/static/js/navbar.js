@@ -6,6 +6,7 @@ $(function() {
     var loginForm = $("#loginForm");
     var addDocBtn = $("#addDocBtn");
     var backupBtn = $("#backupBtn");
+    var retrieveBtn = $("#retrieveBtn");
 
     logoutBtn.on("click", function(){
         $.ajax({
@@ -25,9 +26,33 @@ $(function() {
     });
 
     backupBtn.on("click", function(){
-
-        //bota pra fazer o backup aqui dentro, e coloca um alerta de que o backup foi feito com sucesso
+        $.ajax({
+            type : 'GET',
+            url : '/document/backup',
+            success : () => {
+                window.alert("Backup feito com sucesso!");
+                console.log("Sucesso pra fazer o backup!");
+            },
+            error : function (err) {
+                window.alert("Falha no backup: " + err);
+            }
+        })
     });
+
+    retrieveBtn.on("click", function(){
+        $.ajax({
+            type : 'GET',
+            url : '/document/retrieve',
+            contentType: false,
+            processData: false,
+            success :() => {
+             window.alert("Recuperação feita com sucesso!");
+        },
+            error: function (err) {
+                window.alert("Falha na recuperação: " + err);
+            }
+        })
+    })
 
 
     loginForm.on("submit", function(e){
