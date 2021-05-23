@@ -53,6 +53,9 @@ def create_app(test_config=None):
     @app.route('/create-user')
     def createUser():
         return render_template('./user/create/createUser.html')
+    @app.route('/restoration')
+    def restoration():
+        return render_template('./document/restoration/restoration.html')
     @app.route('/manage-document')
     def manageDocument():
         return render_template('./document/manage/manageDocument.html', titulo = request.args.get("titulo"), autores = request.args.get("autores"), orientadores = request.args.get("orientadores"), InstEns = request.args.get("InstEns"), keyword = request.args.get("keyword"), resumo = request.args.get("resumo"), id = request.args.get("id"))

@@ -192,6 +192,13 @@ def backup():
 
   return "sucesso", 200
 
+@bp.route('/backupw', methods=(['GET','POST']))
+def backupw():
+  pymongocursor = documents_col.find()
+  allfiles = list(pymongocursor)
+  print("Requisicao chegou no backup")
+  return dumps(allfiles)
+
 @bp.route('/retrieve', methods=(['GET','POST']))
 def retrieve():
   print("Requisicao chegou na recuperacao")
@@ -202,4 +209,15 @@ def retrieve():
     if(current == None):
       documents_col.insert_one(js)
   file_read.close()
+  return "sucesso", 200
+
+@bp.route('/retrievew', methods=(['GET','POST']))
+def retrievew():
+  print("Requisicao chegou na recuperacao retrievew")
+  file = request.files['file']
+  jsonarray = loads(file.read())
+  for js in jsonarray:
+    current = documents_col.find_one({"_id": js["_id"]})
+    if(current == None):
+      documents_col.insert_one(js)
   return "sucesso", 200
