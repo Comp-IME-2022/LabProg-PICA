@@ -33,44 +33,47 @@ file.bind('change', function() {
             }
         }),
         error: (e) => console.log(e)
-    })
-});
+    });
 
-createDocumentForm.on("submit", function(e){
-    e.preventDefault()
+    createDocumentForm.on("submit", function(e){
+        e.preventDefault()
+        
+        //Retorna a data de hoje
+        data = new Date()
+        dia = data.getDate().toString()
+        mes = (data.getMonth()+1).toString()
+        mes = (mes.length == 1) ? '0'+mes : mes
+        ano = data.getFullYear().toString()
     
-    //Retorna a data de hoje
-    data = new Date()
-    dia = data.getDate().toString()
-    mes = (data.getMonth()+1).toString()
-    mes = (mes.length == 1) ? '0'+mes : mes
-    ano = data.getFullYear().toString()
+        //Formdata com os metadados do arquivo
+        var  metadataData = {
+            titulo: $('#titulo').val(),
+            autores: $('#autores').val(),
+            orientadores: $('#orientadores').val(),
+            InstEns: $('#InstEns').val(),
+            tipo: $('#tipo').val(),
+            keyword:  $('#keyword').val(),
+            resumo: $('#resumo').val(),
+            data : `${dia}/${mes}/${ano}`,
+            filename: files.name
+        };
+    
+        //requisicao para salvar os metadados
+        $.ajax({
+            type : 'POST',
+            url : '/document/upload-pfc',
+            data: metadataData,
+            dataType: "json",
+            encode: true,
+            success :() => modalContainer.modal("hide"),
+            error: (e) => console.log(e)
+        })
+    
+        return false
+    });
 
-    //Formdata com os metadados do arquivo
-    var  metadataData = {
-        titulo: $('#titulo').val(),
-        autores: $('#autores').val(),
-        orientadores: $('#orientadores').val(),
-        InstEns: $('#InstEns').val(),
-        tipo: $('#tipo').val(),
-        keyword:  $('#keyword').val(),
-        resumo: $('#resumo').val(),
-        data : `${dia}/${mes}/${ano}`,
-        filename: files.name
-    };
-
-    //requisicao para salvar os metadados
-    $.ajax({
-        type : 'POST',
-        url : '/document/upload-pfc',
-        data: metadataData,
-        dataType: "json",
-        encode: true,
-        success :() => modalContainer.modal("hide"),
-        error: (e) => console.log(e)
-    })
-
-    return false
 });
+
+
 
 });

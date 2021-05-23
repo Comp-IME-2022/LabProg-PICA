@@ -1,4 +1,4 @@
-import fitz  
+import fitz
 import json
 from flask import (
     Blueprint, flash, g, redirect, render_template, send_file, request, session, url_for, abort, jsonify

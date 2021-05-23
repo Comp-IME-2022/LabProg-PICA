@@ -5,6 +5,7 @@ $(function() {
     var addUserBtn = $("#addUserBtn");
     var loginForm = $("#loginForm");
     var addDocBtn = $("#addDocBtn");
+    var backupBtn = $("#backupBtn");
 
     logoutBtn.on("click", function(){
         $.ajax({
@@ -22,6 +23,12 @@ $(function() {
     addDocBtn.on("click", function(){
         openModal(modalContainer, "/modal", "Adicionar Documento", "/create-document");
     });
+
+    backupBtn.on("click", function(){
+
+        //bota pra fazer o backup aqui dentro, e coloca um alerta de que o backup foi feito com sucesso
+    });
+
 
     loginForm.on("submit", function(e){
         e.preventDefault()
