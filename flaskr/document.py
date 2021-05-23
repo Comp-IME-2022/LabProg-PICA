@@ -160,60 +160,15 @@ def getPdfData():
     orientadores = retornar_orientadores(doc)
   data = {'titulo':titulo, 'autores':autores, 'resumo':resumo, 'palavras_chave':palavras_chave, 'tipo': tipo,  'orientadores':orientadores}
   return data, 200
-"""
-@bp.route('/backup', methods=(['GET','POST']))
-def backup():
-  recuperar = int(request.args.get("recuperar"))
-  pymongocursor = documents_col.find()
-  allfiles = list(pymongocursor)
-
-  if(recuperar == 0):
-    file_open = open("./flaskr/static/file/backup.JSON","w")
-    file_open.write(dumps(allfiles))
-    file_open.close()
-
-  if(recuperar == 1): 
-    file = request.files['file']
-    jsonarray = loads(file.readline())
-    for js in jsonarray:
-        documents_col.insert_one(js)
-
-  return "sucesso", 200
-"""
-
-@bp.route('/backup', methods=(['GET','POST']))
-def backup():
-  pymongocursor = documents_col.find()
-  allfiles = list(pymongocursor)
-  print("Requisicao chegou no backup")
-  file_open = open("./flaskr/static/file/backup.JSON","w")
-  file_open.write(dumps(allfiles))
-  file_open.close()
-
-  return "sucesso", 200
 
 @bp.route('/backupw', methods=(['GET','POST']))
 def backupw():
   pymongocursor = documents_col.find()
   allfiles = list(pymongocursor)
-  print("Requisicao chegou no backup")
   return dumps(allfiles)
-
-@bp.route('/retrieve', methods=(['GET','POST']))
-def retrieve():
-  print("Requisicao chegou na recuperacao")
-  file_read=open("./flaskr/static/file/backup.JSON","r")
-  jsonarray = loads(file_read.readline())
-  for js in jsonarray:
-    current = documents_col.find_one({"_id": js["_id"]})
-    if(current == None):
-      documents_col.insert_one(js)
-  file_read.close()
-  return "sucesso", 200
 
 @bp.route('/retrievew', methods=(['GET','POST']))
 def retrievew():
-  print("Requisicao chegou na recuperacao retrievew")
   file = request.files['file']
   jsonarray = loads(file.read())
   for js in jsonarray:

@@ -6,7 +6,6 @@ $(function() {
     var loginForm = $("#loginForm");
     var addDocBtn = $("#addDocBtn");
     var backupBtn = $("#backupBtn");
-    var retrieveBtn = $("#retrieveBtn");
 
     logoutBtn.on("click", function(){
         $.ajax({
@@ -20,24 +19,11 @@ $(function() {
         openModal(modalContainer, "/modal", "Cadastrar Usuário", "/create-user");
     });
 
-
     addDocBtn.on("click", function(){
         openModal(modalContainer, "/modal", "Adicionar Documento", "/create-document");
     });
 
     backupBtn.on("click", function(){
-        $.ajax({
-            type : 'GET',
-            url : '/document/backup',
-            success : () => {
-                //window.alert("Backup feito com sucesso!");
-                console.log("Sucesso pra fazer o backup!");
-            },
-            error : function (err) {
-                window.alert("Falha no backup: " + err);
-            }
-        })
-
         $.ajax({
             type : 'GET',
             url : '/document/backupw',
@@ -53,7 +39,6 @@ $(function() {
                     type: 'application/json'
                   });
 
-
                 var link=document.createElement('a');
                 link.href=window.URL.createObjectURL(blob);
                 link.download=`backup_${dia}/${mes}/${ano}_${hora}h${min}.JSON`;
@@ -63,31 +48,11 @@ $(function() {
                 window.alert("Falha no backup: " + err);
             }
         })
-
     });
-
-
 
     $("#retrieveBtn2").on("click", function(){
         openModal(modalContainer, "/modal", "Realizar restauração", "/restoration");
     });
-
-
-    retrieveBtn.on("click", function(){
-        $.ajax({
-            type : 'GET',
-            url : '/document/retrieve',
-            contentType: false,
-            processData: false,
-            success :() => {
-             window.alert("Recuperação feita com sucesso!");
-        },
-            error: function (err) {
-                window.alert("Falha na recuperação: " + err);
-            }
-        })
-    })
-
 
     loginForm.on("submit", function(e){
         e.preventDefault()
@@ -121,7 +86,6 @@ $(function() {
                 btn.removeClass("disabled")
             }
         })
-
         return false
     })
 });
