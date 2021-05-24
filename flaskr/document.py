@@ -201,6 +201,7 @@ def backupw():
 def retrievew():
   file = request.files['file']
   jsonarray = loads(file.read())
+  documents_col.delete_many({})
   for js in jsonarray:
     current = documents_col.find_one({"_id": js["_id"]})
     if(current == None):
