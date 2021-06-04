@@ -1,0 +1,18 @@
+<script src="{{url_for('static', filename='js/restore.js')}}"></script>
+<link rel="stylesheet" href="{{url_for('static', filename='css/createUser.css')}}">
+
+<div class="container">
+<form class="form" id="restorationForm">
+    <p>Selecione um arquivo JSON válido para fazer a restauração dos documentos</p>
+
+		<label for="myfile">Selecione o arquivo:</label><br>
+		<input accept=".JSON" class="form-control-file" type="file" id="myRestorationFile" name="myRestorationFile">
+		<div class="button ">
+
+    <div class="row">
+        <div class="btnContainer col-4">
+            <button class="btn btn-outline-success" type="submit" id="submitRestore">Restaurar BD</button>
+        </div>
+    </div>
+</form>
+</div>

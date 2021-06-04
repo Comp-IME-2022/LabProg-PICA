@@ -1,4 +1,4 @@
-import fitz  
+import fitz
 import json
 from flask import (
     Blueprint, flash, g, redirect, render_template, send_file, request, session, url_for, abort, jsonify
@@ -9,10 +9,14 @@ import base64
 from werkzeug.utils import secure_filename
 import os
 import errno
+from bson.json_util import dumps
+from bson.json_util import loads
+import re
 
 myclient = pymongo.MongoClient("mongodb+srv://limarcospap:cQ6oyLLGIukkPvnd@cluster0.gahcw.mongodb.net/test?authSource=admin&replicaSet=atlas-708nws-shard-0&readPreference=primary&appname=MongoDB%20Compass&ssl=true")
 bd = myclient["labprog"]
 documents_col = bd["documentos"]
+
 
 bp = Blueprint('document', __name__, url_prefix='/document')
 
@@ -53,11 +57,10 @@ def downloadPfc(fileToDownload):
 def uploadPfcFile():
     file = request.files['file']
     filename = file.filename
-
+    filename = secure_filename(filename)
     filepath = os.path.join(UPLOAD_FOLDER, filename)
     os.makedirs(os.path.dirname(filepath), exist_ok=True)
     file.save(filepath)
-
     return "sucesso", 200
 
 @bp.route('/search-pfc', methods=(['GET','POST']))
@@ -114,8 +117,6 @@ def detectar_tipo(doc):
     for tipo in tipos:
         if (doc[1].get_text().lower().find(tipo)) != -1:    
             return tipos_dict[tipo]
-    
-  
     return 'tipo nao encontrado'
 
 def retornar_titulo(doc):
@@ -133,7 +134,23 @@ def retornar_resumo(doc):
     resumo_pagina_numero = localizar_pagina("resumo", doc)
     pagina_resumo = doc[resumo_pagina_numero-1]
     resumo_texto_pagina = pagina_resumo.get_text()
-    return resumo_texto_pagina[resumo_texto_pagina.lower().find("resumo")+6:]
+    string = resumo_texto_pagina[resumo_texto_pagina.lower().find("resumo")+6:]
+    wrd = 'Palavras-chave:'
+    string = string.split()
+    res = -1
+    for idx in string:
+        if len(re.findall(wrd, idx)) > 0:
+            res = string.index(idx) + 1
+    finalstr = ""
+    if(res != -1):
+      for i in range(0,res-1):
+        finalstr = finalstr + string[i] + " "
+    else:
+      for i in string:
+        finalstr = finalstr + i + " "
+    return finalstr
+
+    #return resumo_texto_pagina[resumo_texto_pagina.lower().find("resumo")+6:]
 
 def retornar_orientadores(doc):
     for pag in doc:
@@ -143,9 +160,25 @@ def retornar_orientadores(doc):
             return pag.getTextbox(rect[0])
     return 'nao foram encontrados orientadores'
 
+def retornar_instens(doc):
+  capa = doc[0]
+  texto = capa.get_text("text")
+  string = ""
+  crt = 0
+  for c in texto:
+    if c=="\n":
+      crt = crt+1
+      continue
+    if crt == 3:
+      string = string + c
+    if crt > 3:
+      break
+  return string
+
 @bp.route('/get-pdf-data')
 def getPdfData():
   filename = request.args.get('filename')
+  filename = secure_filename(filename)
   print(filename)
   with fitz.open(UPLOAD_FOLDER+'/'+filename) as doc:
     titulo = retornar_titulo(doc)
@@ -154,5 +187,23 @@ def getPdfData():
     palavras_chave = retornar_palavras_chave(doc)
     tipo = detectar_tipo(doc)
     orientadores = retornar_orientadores(doc)
-  data = {'titulo':titulo, 'autores':autores, 'resumo':resumo, 'palavras_chave':palavras_chave, 'tipo': tipo,  'orientadores':orientadores}
+    inst_end = retornar_instens(doc)
+  data = {'titulo':titulo, 'autores':autores, 'resumo':resumo, 'palavras_chave':palavras_chave, 'tipo': tipo,  'orientadores':orientadores, 'instEns':inst_end}
   return data, 200
+
+@bp.route('/backupw', methods=(['GET','POST']))
+def backupw():
+  pymongocursor = documents_col.find()
+  allfiles = list(pymongocursor)
+  return dumps(allfiles)
+
+@bp.route('/retrievew', methods=(['GET','POST']))
+def retrievew():
+  file = request.files['file']
+  jsonarray = loads(file.read())
+  documents_col.delete_many({})
+  for js in jsonarray:
+    current = documents_col.find_one({"_id": js["_id"]})
+    if(current == None):
+      documents_col.insert_one(js)
+  return "sucesso", 200

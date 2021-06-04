@@ -28,19 +28,6 @@ def register():
     except(e):
       return json.dumps(e), 500, {'ContentType': 'application/json'}
 
-@bp.route('/findall')
-def findall():
-  resp = ""
-  for x in users_col.find():
-    resp = resp + str(x)+"\n"
-  return resp
-      
-@bp.route('/insert_one')
-def insertall():
-  json_obj = {'nome': 'Gustavo', 'sobrenome': 'Testoni', 'nascimento': '15/02/1997', 'login': 'gcasq', 'senha': '123456', 'admin': true}
-  x = users_col.insert_one(json_obj)
-  return "deu certo"
-
 @bp.route('/login', methods=(['POST']))
 def login():
   error = None

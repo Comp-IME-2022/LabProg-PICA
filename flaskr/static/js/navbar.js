@@ -5,6 +5,7 @@ $(function() {
     var addUserBtn = $("#addUserBtn");
     var loginForm = $("#loginForm");
     var addDocBtn = $("#addDocBtn");
+    var backupBtn = $("#backupBtn");
 
     logoutBtn.on("click", function(){
         $.ajax({
@@ -18,9 +19,39 @@ $(function() {
         openModal(modalContainer, "/modal", "Cadastrar Usuário", "/create-user");
     });
 
-
     addDocBtn.on("click", function(){
         openModal(modalContainer, "/modal", "Adicionar Documento", "/create-document");
+    });
+
+    backupBtn.on("click", function(){
+        $.ajax({
+            type : 'GET',
+            url : '/document/backupw',
+            success : (listFiles) => {
+                data = new Date();
+                dia = data.getDate().toString()
+                mes = (data.getMonth()+1).toString()
+                mes = (mes.length == 1) ? '0'+mes : mes
+                ano = data.getFullYear().toString();
+                hora = data.getHours().toString();
+                min = data.getMinutes().toString();
+                var blob = new Blob([listFiles], {
+                    type: 'application/json'
+                  });
+
+                var link=document.createElement('a');
+                link.href=window.URL.createObjectURL(blob);
+                link.download=`backup_${dia}/${mes}/${ano}_${hora}h${min}.JSON`;
+                link.click();
+            },
+            error : function (err) {
+                window.alert("Falha no backup: " + err);
+            }
+        })
+    });
+
+    $("#retrieveBtn2").on("click", function(){
+        openModal(modalContainer, "/modal", "Realizar restauração", "/restoration");
     });
 
     loginForm.on("submit", function(e){
@@ -55,7 +86,6 @@ $(function() {
                 btn.removeClass("disabled")
             }
         })
-
         return false
     })
 });

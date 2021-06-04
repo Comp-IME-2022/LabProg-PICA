@@ -16,13 +16,13 @@ $( function() {
     }
 
     console.log(formData);
-    // $.ajax({
-    //     type: "POST",
-    //     url: "/auth/register",
-    //     data: formData,
-    //     dataType: 'json',
-    //     success: () => modalContainer.modal("hide")
-    // })
+     $.ajax({
+         type: "POST",
+         url: "/auth/register",
+         data: formData,
+         dataType: 'json',
+         success: () => modalContainer.modal("hide")
+     })
   })
   
 });
