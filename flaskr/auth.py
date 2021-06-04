@@ -61,6 +61,26 @@ def login():
     
   return json.dumps({'error': error}), 403, {'ContentType': 'application/json'}
 
+@bp.route('/loginapp', methods=(['POST']))
+def loginApp():
+  error = None
+  user = users_col.find_one({"login": request.form["login"]})
+  loginError = False
+
+  if user is None:
+    error = 'username'
+    loginError = True
+  elif not check_password_hash(user["senha"], request.form["senha"]):
+    error = 'password'
+    loginError = True
+      
+  if not loginError:
+    response = user.copy()
+    response['_id'] = str(response['_id'])
+    response['isLoggedIn'] = True
+    return json.dumps(response), 200, {'ContentType': 'application/json'} 
+    
+  return json.dumps({'isLoggedIn': False, 'error': error }), 403, {'ContentType': 'application/json'}
 
 @bp.before_app_request
 def load_logged_in_user():
